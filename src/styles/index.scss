@@ -17,10 +17,14 @@ $font-size-5: 14px;
 $font-size-6: 12px;
 $font-family: Roboto, sans-serif;
 
+$background-color: rgb(28, 31, 36);
+$text-color: $color-white;
+
 $toolbar-height: 40px;
+$toolbar-offset: 64px;
 
 @import 'mixins';
-@import 'reset';
+//@import 'reset';
 @import 'base';
 @import 'components';
 @import 'scrollbar';

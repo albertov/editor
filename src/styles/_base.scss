@@ -12,8 +12,9 @@
   font-style: normal;
 }
 
-html {
-  color: $color-white;
+.maputnik-layout {
+  background-color: $background-color;
+  color: $text-color;
   font-size: $font-size-5;
   box-sizing: border-box;
 }
