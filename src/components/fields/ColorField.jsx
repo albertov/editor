@@ -50,11 +50,20 @@ class ColorField extends React.Component {
   }
 
   get color() {
-    return Color(this.props.value || '#fff')
+    return Color(this.props.value || '#fff').rgb()
   }
 
   render() {
     const offset = this.calcPickerOffset()
+    var currentColor = this.color.object()
+    currentColor = {
+      r: currentColor.r,
+      g: currentColor.g,
+      b: currentColor.b,
+      // Rename alpha -> a for ChromePicker
+      a: currentColor.alpha
+    }
+
     const picker = <div
       className="maputnik-color-picker-offset"
       style={{
@@ -64,7 +73,7 @@ class ColorField extends React.Component {
         top: offset.top,
       }}>
       <ChromePicker
-        color={this.color.object()}
+        color={currentColor}
         onChange={c => this.props.onChange(formatColor(c))}
       />
       <div
@@ -81,8 +90,13 @@ class ColorField extends React.Component {
       />
     </div>
 
+    var swatchStyle = {
+      "background-color": this.props.value
+    };
+
     return <div className="maputnik-color-wrapper">
       {this.state.pickerOpened && picker}
+      <div className="maputnik-color-swatch" style={swatchStyle}></div>
       <input
         className="maputnik-color"
         ref="colorInput"
