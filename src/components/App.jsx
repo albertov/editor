@@ -22,7 +22,6 @@ import isEqual from 'lodash.isequal'
 import Debug from '../libs/debug'
 
 import MapboxGl from 'mapbox-gl'
-import mapboxUtil from 'mapbox-gl/src/util/mapbox'
 
 
 function updateRootSpec(spec, fieldName, newValues) {
@@ -212,11 +211,6 @@ export default class App extends React.Component {
 
       if(!this.state.sources.hasOwnProperty(key) && val.type === "vector" && val.hasOwnProperty("url")) {
         let url = val.url;
-        try {
-          url = mapboxUtil.normalizeSourceURL(url, MapboxGl.accessToken);
-        } catch(err) {
-          console.warn("Failed to normalizeSourceURL: ", err);
-        }
 
         fetch(url)
           .then((response) => {
@@ -246,7 +240,7 @@ export default class App extends React.Component {
     }
 
     if(!isEqual(this.state.sources, sourceList)) {
-      console.debug("Setting sources");
+      console.debug("Setting sources", sourceList);
       this.setState({
         sources: sourceList
       })

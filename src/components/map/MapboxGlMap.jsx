@@ -11,8 +11,6 @@ import colors from 'mapbox-gl-inspect/lib/colors'
 import Color from 'color'
 import ZoomControl from '../../libs/zoomcontrol'
 import { colorHighlightedLayer } from '../../libs/highlight'
-import 'mapbox-gl/dist/mapbox-gl.css'
-import '../../mapboxgl.css'
 import '../../libs/mapbox-rtl'
 
 function renderPropertyPopup(features) {
@@ -104,7 +102,7 @@ export default class MapboxGlMap extends React.Component {
     const map = new MapboxGl.Map({
       container: this.container,
       style: this.props.mapStyle,
-      hash: true,
+      hash: false,
     })
 
     const zoom = new ZoomControl;
