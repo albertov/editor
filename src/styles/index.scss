@@ -18,33 +18,62 @@ $font-size-6: 12px;
 $font-family: Roboto, sans-serif;
 
 $toolbar-height: 40px;
-$toolbar-offset: 0;
+$toolbar-offset: 0px;
 
-@import 'mixins';
-@import 'reset';
-@import 'base';
-@import 'components';
-@import 'scrollbar';
-@import 'picker';
-@import 'toolbar';
-@import 'modal';
-@import 'export';
-@import 'layout';
-@import 'layer';
-@import 'input';
-@import 'filtereditor';
-@import 'zoomproperty';
-@import 'popup';
-@import 'map';
-@import 'react-collapse';
+$layout-list-width: 200px;
+$layout-drawer-width: 350px;
 
-/**
- * Hacks for webdriverio isVisibleWithinViewport
- */
-#app {
-  height: 100vh;
-}
-
+//APP LAYOUT
 .maputnik-layout {
-  height: 100vh;
+  font-family: $font-family;
+  color: $color-white;
+
+  &-list {
+    position: fixed;
+    bottom: 0;
+    height: calc(100% - #{$toolbar-height + $toolbar-offset});
+    top: $toolbar-height + $toolbar-offset;
+    left: 0;
+    z-index: 3;
+    width: $layout-list-width;
+    background-color: $color-black;
+  }
+
+  &-drawer {
+    position: fixed;
+    bottom: 0;
+    height: calc(100% - #{$toolbar-height + $toolbar-offset});
+    top: $toolbar-height + $toolbar-offset;
+    left: 200px;
+    z-index: 1;
+    width: $layout-drawer-width;
+    background-color: $color-black;
+  }
+
+  &-bottom {
+    position: fixed;
+    height: 50px;
+    bottom: 0;
+    left: 550px;
+    z-index: 1;
+    width: 100%;
+    background-color: $color-black;
+  }
+  @import 'mixins';
+  @import 'reset';
+  @import 'base';
+  @import 'components';
+  @import 'scrollbar';
+  @import 'picker';
+  @import 'toolbar';
+  @import 'modal';
+  @import 'export';
+  @import 'layout';
+  @import 'layer';
+  @import 'input';
+  @import 'filtereditor';
+  @import 'zoomproperty';
+  @import 'popup';
+  @import 'map';
+  @import 'react-collapse';
 }
