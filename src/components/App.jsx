@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Mousetrap from 'mousetrap'
 
 import MapboxGlMap from './map/MapboxGlMap'
@@ -14,7 +15,6 @@ import style from '../libs/style.js'
 import { initialStyleUrl, loadStyleUrl } from '../libs/urlopen'
 import { undoMessages, redoMessages } from '../libs/diffmessage'
 import { loadDefaultStyle, StyleStore } from '../libs/stylestore'
-import { ApiStyleStore } from '../libs/apistore'
 import { RevisionStore } from '../libs/revisions'
 import LayerWatcher from '../libs/layerwatcher'
 import tokens from '../config/tokens.json'
@@ -38,41 +38,27 @@ function updateRootSpec(spec, fieldName, newValues) {
 }
 
 export default class App extends React.Component {
+  static propTypes = {
+    mapStyle: PropTypes.object
+  , onStyleSaved: PropTypes.func
+  , transformRequest: PropTypes.func
+  }
+
+  static defaultProps = {
+    mapStyle: style.emptyStyle
+  , onSnapshotSave: () => null
+  , onSave: () => null
+  , transformRequest: () => undefined
+  }
+
   constructor(props) {
     super(props)
     this.revisionStore = new RevisionStore()
-    this.styleStore = new ApiStyleStore({
-      onLocalStyleChange: mapStyle => this.onStyleChanged(mapStyle, false)
-    })
-
-    const styleUrl = initialStyleUrl()
-    if(styleUrl) {
-      this.styleStore = new StyleStore()
-      loadStyleUrl(styleUrl, mapStyle => this.onStyleChanged(mapStyle))
-    } else {
-      this.styleStore.init(err => {
-        if(err) {
-          console.log('Falling back to local storage for storing styles')
-          this.styleStore = new StyleStore()
-        }
-        this.styleStore.latestStyle(mapStyle => this.onStyleChanged(mapStyle))
-
-        if(Debug.enabled()) {
-          Debug.set("maputnik", "styleStore", this.styleStore);
-          Debug.set("maputnik", "revisionStore", this.revisionStore);
-        }
-      })
-    }
-
-    if(Debug.enabled()) {
-      Debug.set("maputnik", "revisionStore", this.revisionStore);
-      Debug.set("maputnik", "styleStore", this.styleStore);
-    }
 
     this.state = {
       errors: [],
       infos: [],
-      mapStyle: style.emptyStyle,
+      mapStyle: props.mapStyle,
       selectedLayerIndex: 0,
       sources: {},
       vectorLayers: {},
@@ -83,6 +69,10 @@ export default class App extends React.Component {
     this.layerWatcher = new LayerWatcher({
       onVectorLayersChange: v => this.setState({ vectorLayers: v })
     })
+  }
+
+  static getDerivedStateFromProps ({mapStyle}, prevState) {
+    return {...prevState, mapStyle};
   }
 
   componentDidMount() {
@@ -96,7 +86,7 @@ export default class App extends React.Component {
   }
 
   saveStyle(snapshotStyle) {
-    this.styleStore.save(snapshotStyle)
+    this.props.onSnapshotSave(snapshotStyle)
   }
 
   updateFonts(urlTemplate) {
@@ -262,7 +252,9 @@ export default class App extends React.Component {
     return  <MapboxGlMap {...mapProps}
       inspectModeEnabled={this.state.inspectModeEnabled}
       highlightedLayer={this.state.mapStyle.layers[this.state.selectedLayerIndex]}
-      onLayerSelect={this.onLayerSelect.bind(this)} />
+      onLayerSelect={this.onLayerSelect.bind(this)}
+      transformRequest={this.props.transformRequest}
+      />
   }
 
   onLayerSelect(layerId) {

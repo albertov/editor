@@ -56,12 +56,14 @@ export default class MapboxGlMap extends React.Component {
     mapStyle: PropTypes.object.isRequired,
     inspectModeEnabled: PropTypes.bool.isRequired,
     highlightedLayer: PropTypes.object,
+    transformRequest: PropTypes.func
   }
 
   static defaultProps = {
     onMapLoaded: () => {},
     onDataChange: () => {},
     onLayerSelect: () => {},
+    transformRequest: () => undefined,
     mapboxAccessToken: tokens.mapbox,
   }
 
@@ -103,6 +105,7 @@ export default class MapboxGlMap extends React.Component {
       container: this.container,
       style: this.props.mapStyle,
       hash: false,
+      transformRequest: this.props.transformRequest,
     })
 
     const zoom = new ZoomControl;
