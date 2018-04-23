@@ -78,6 +78,8 @@ export default class Toolbar extends React.Component {
     mapStyle: PropTypes.object.isRequired,
     inspectModeEnabled: PropTypes.bool.isRequired,
     onStyleChanged: PropTypes.func.isRequired,
+    // A style has been saved
+    onStyleSaved: PropTypes.func.isRequired,
     // A new style has been uploaded
     onStyleOpen: PropTypes.func.isRequired,
     // A dict of source id's and the available source layers
@@ -108,25 +110,12 @@ export default class Toolbar extends React.Component {
     })
   }
 
+  onSave() {
+    this.props.onStyleSaved()
+  }
+
   render() {
     return <div className='maputnik-toolbar'>
-      <SettingsModal
-        mapStyle={this.props.mapStyle}
-        onStyleChanged={this.props.onStyleChanged}
-        isOpen={this.state.isOpen.settings}
-        onOpenToggle={this.toggleModal.bind(this, 'settings')}
-      />
-      <ExportModal
-        mapStyle={this.props.mapStyle}
-        onStyleChanged={this.props.onStyleChanged}
-        isOpen={this.state.isOpen.export}
-        onOpenToggle={this.toggleModal.bind(this, 'export')}
-      />
-      <OpenModal
-        isOpen={this.state.isOpen.open}
-        onStyleOpen={this.props.onStyleOpen}
-        onOpenToggle={this.toggleModal.bind(this, 'open')}
-      />
       <SourcesModal
           mapStyle={this.props.mapStyle}
           onStyleChanged={this.props.onStyleChanged}
@@ -135,7 +124,7 @@ export default class Toolbar extends React.Component {
       />
       <div className="maputnik-toolbar__inner">
         <div className="maputnik-toolbar__actions">
-          <ToolbarAction wdKey="nav:save" onClick={this.toggleModal.bind(this, 'export')}>
+          <ToolbarAction wdKey="nav:save" onClick={this.onSave.bind(this)}>
             <IconText>Save</IconText>
           </ToolbarAction>
           <ToolbarAction wdKey="nav:sources" onClick={this.toggleModal.bind(this, 'sources')}>

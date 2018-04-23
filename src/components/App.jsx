@@ -47,8 +47,8 @@ export default class App extends React.Component {
   static defaultProps = {
     mapStyle: style.emptyStyle
   , onSnapshotSave: () => null
-  , onSave: () => null
-  , transformRequest: () => undefined
+  , onStyleSaved: () => null
+  , transformRequest: (url) => {url}
   }
 
   constructor(props) {
@@ -200,12 +200,10 @@ export default class App extends React.Component {
       };
 
       if(!this.state.sources.hasOwnProperty(key) && val.type === "vector" && val.hasOwnProperty("url")) {
-        let url = val.url;
+        let req = this.props.transformRequest(val.url);
 
-        fetch(url)
-          .then((response) => {
-            return response.json();
-          })
+        fetch(req.url, req)
+          .then((response) => response.json())
           .then((json) => {
             if(!json.hasOwnProperty("vector_layers")) {
               return;
@@ -273,6 +271,7 @@ export default class App extends React.Component {
       sources={this.state.sources}
       onStyleChanged={this.onStyleChanged.bind(this)}
       onStyleOpen={this.onStyleChanged.bind(this)}
+      onStyleSaved={()=>this.props.onStyleSaved(this.state.mapStyle)}
       onInspectModeToggle={this.changeInspectMode.bind(this)}
     />
 
