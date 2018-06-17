@@ -99,6 +99,10 @@ export default class MapboxGlMap extends React.Component {
       this.state.inspect.render()
     }
   }
+  componentWillUnmount() {
+    if (this.state.map)
+      this.state.map.remove();
+  }
 
   componentDidMount() {
     const map = new MapboxGl.Map({
